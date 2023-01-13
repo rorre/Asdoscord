@@ -31,9 +31,9 @@ export default {
     if (!interaction.inGuild()) return;
 
     const message = interaction.options.getString("message", true);
-    let ssoUsername = usernameCache.get(
-      interaction.guildId + "-" + interaction.user.id
-    );
+
+    const cacheKey = interaction.guildId + "-" + interaction.user.id;
+    let ssoUsername = usernameCache.get(cacheKey);
     if (!ssoUsername) {
       const user = await prisma.serverMember.findUnique({
         select: { ssoUsername: true },
@@ -51,7 +51,8 @@ export default {
           ephemeral: true,
         });
       }
-      ssoUsername = user?.ssoUsername;
+      ssoUsername = user.ssoUsername;
+      usernameCache.set(cacheKey, ssoUsername);
     }
 
     const messageEmbed = new EmbedBuilder()
