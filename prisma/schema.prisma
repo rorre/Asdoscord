@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  username     String         @id
+  npm          String         @unique
+  name         String
+  ServerMember ServerMember[]
+  Message      Message[]
+}
+
+model ServerConfig {
+  id             String @id
+  verifiedRoleId String
+}
+
+model ServerMember {
+  user        User   @relation(fields: [ssoUsername], references: [username])
+  ssoUsername String
+  serverId    String
+  discordId   String
+
+  @@id([ssoUsername, serverId])
+  @@unique([serverId, discordId])
+}
+
+model Message {
+  id          Int    @id @default(autoincrement())
+  user        User   @relation(fields: [ssoUsername], references: [username])
+  ssoUsername String
+  serverId    String
+  message     String
+
+  @@index([serverId])
+  @@index([ssoUsername, serverId])
+}
