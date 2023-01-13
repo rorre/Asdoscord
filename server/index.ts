@@ -43,25 +43,35 @@ app.get("/callback/:ident", async (req, res) => {
     },
   });
 
-  try {
-    await prisma.serverMember.create({
-      data: {
+  const existing = await prisma.serverMember.findUnique({
+    where: {
+      ssoUsername_serverId: {
         ssoUsername: user.user,
         serverId: gid,
-        discordId: uid,
       },
-    });
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    },
+  });
+
+  if (existing) {
+    if (existing.discordId != uid) {
       return res.send(
         "Akun SSO sudah dipakai di server ini. Hanya ada satu akun discord yang bisa terkait dengan akun SSO."
       );
     }
-
-    return res.send("An unknown error occured.");
+  } else {
+    try {
+      await prisma.serverMember.create({
+        data: {
+          ssoUsername: user.user,
+          serverId: gid,
+          discordId: uid,
+        },
+      });
+      await verifyUser(gid, uid);
+    } catch (e) {
+      return res.send("An unknown error occured.");
+    }
   }
-
-  await verifyUser(gid, uid);
   res.redirect("/done");
 });
 
