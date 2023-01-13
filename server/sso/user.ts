@@ -1,7 +1,5 @@
 import { UserAttribute, ResponseUserData, ProgramInformation } from "./types";
-const additionalInfo: {
-  [key: string]: ProgramInformation;
-} = require("./additional-info.json");
+import additionalInfo from "./additional-info.json";
 
 export default class SSOUser {
   user: string;
@@ -30,6 +28,7 @@ export default class SSOUser {
 
     this.attributes = newAttributes;
     if (newAttributes.kd_org in additionalInfo) {
+      // @ts-ignore
       this.programInfo = additionalInfo[newAttributes.kd_org];
     } else {
       this.programInfo = null;
