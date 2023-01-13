@@ -1,5 +1,6 @@
 import { GuildMember, PartialGuildMember } from "discord.js";
 import { prisma } from "../../shared/prisma";
+import { usernameCache } from "../utils/caches";
 
 export async function onMemberLeave(member: GuildMember | PartialGuildMember) {
   await prisma.serverMember.deleteMany({
@@ -8,4 +9,6 @@ export async function onMemberLeave(member: GuildMember | PartialGuildMember) {
       serverId: member.guild.id,
     },
   });
+
+  usernameCache.remove(member.guild.id + "-" + member.user.id);
 }

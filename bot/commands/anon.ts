@@ -4,16 +4,10 @@ import {
   EmbedBuilder,
   SlashCommandBuilder,
 } from "discord.js";
-import LRUCache from "lru-native2";
 import { calculateHash } from "../../shared/crypto";
 import { prisma } from "../../shared/prisma";
 import { BotCommand } from "../types";
-
-const usernameCache = new LRUCache<string>({
-  size: 500,
-  maxElements: 1000,
-  maxLoadFactor: 2.0,
-});
+import { usernameCache } from "../utils/caches";
 
 export default {
   data: new SlashCommandBuilder()

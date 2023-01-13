@@ -8,6 +8,7 @@ import {
 import { client } from "..";
 import { encrypt } from "../../shared/crypto";
 import { prisma } from "../../shared/prisma";
+import { usernameCache } from "../utils/caches";
 
 export async function ssoAuthButtonListener(
   interaction: Interaction<CacheType>
@@ -35,6 +36,7 @@ export async function ssoAuthButtonListener(
 }
 
 export async function verifyUser(guildId: string, userId: string) {
+  usernameCache.remove(guildId + "-" + userId);
   const guildCfg = await prisma.serverConfig.findFirstOrThrow({
     where: { id: guildId },
   });
