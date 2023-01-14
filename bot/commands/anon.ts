@@ -27,7 +27,7 @@ export const SendAnonCommand: BotCommand<
 
   async execute(interaction) {
     if (!interaction.inGuild()) return;
-
+    await interaction.deferReply({ ephemeral: true });
     const message = interaction.options.getString("message", true);
 
     const cacheKey = interaction.guildId + "-" + interaction.user.id;
@@ -86,6 +86,7 @@ export const RevealByUidCommand: BotCommand<
 
   async execute(interaction) {
     if (!interaction.inGuild()) return;
+    await interaction.deferReply({ ephemeral: true });
 
     const uid = interaction.options.getString("uid", true);
     const members = await prisma.serverMember.findMany({
