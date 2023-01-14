@@ -10,6 +10,9 @@ export default {
     .setName("ping")
     .setDescription("Replies with Pong!"),
   async execute(interaction) {
-    await interaction.reply("Pong!");
+    const start = new Date().getTime();
+    await interaction.reply({ content: "Pong!", ephemeral: true });
+    const delta = new Date().getTime() - start;
+    interaction.editReply(`Pong! (${delta}ms)`);
   },
 } as BotCommand<ChatInputCommandInteraction<CacheType>>;
