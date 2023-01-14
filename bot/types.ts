@@ -7,7 +7,5 @@ import {
 
 export interface BotCommand<T extends Interaction> {
   data: SlashCommandBuilder;
-  execute: (
-    interaction: T
-  ) => Promise<InteractionResponse<boolean> | undefined>;
+  execute: (interaction: T) => Promise<void>;
 }
