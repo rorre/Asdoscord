@@ -44,10 +44,8 @@ export const SendAnonCommand: BotCommand<
       });
 
       if (!user) {
-        return await interaction.reply({
-          content: "You have not been verified.",
-          ephemeral: true,
-        });
+        await interaction.editReply("You have not been verified.");
+        return;
       }
       ssoUsername = user.ssoUsername;
       usernameCache.set(cacheKey, ssoUsername);
@@ -61,7 +59,7 @@ export const SendAnonCommand: BotCommand<
       });
 
     await interaction.channel?.send({ embeds: [messageEmbed] });
-    await interaction.reply({ content: "Sent!", ephemeral: true });
+    await interaction.editReply("Sent!");
 
     await prisma.message.create({
       data: {
@@ -96,18 +94,18 @@ export const RevealByUidCommand: BotCommand<
       (m) => calculateHash(m.ssoUsername) == uid
     );
     if (filteredMember.length == 0) {
-      return await interaction.reply("Cannot find user with given UID.");
+      await interaction.editReply("Cannot find user with given UID.");
+      return;
     }
 
-    await interaction.reply({
-      ephemeral: true,
-      content: stripIndents`
+    await interaction.editReply(
+      stripIndents`
       Members:
 
       ${filteredMember
         .map((m) => `${m.ssoUsername} | ${userMention(m.discordId)}`)
         .join("\n")}
-    `,
-    });
+    `
+    );
   },
 };
