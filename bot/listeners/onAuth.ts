@@ -10,6 +10,10 @@ import { encrypt } from "../../shared/crypto";
 import { prisma } from "../../shared/prisma";
 import { usernameCache } from "../utils/caches";
 
+const serviceUrl = process.env.SERVICE_URL;
+if (typeof serviceUrl === "undefined")
+  throw new Error("Missing SERVICE_URL in env");
+
 export async function ssoAuthButtonListener(
   interaction: Interaction<CacheType>
 ) {
@@ -20,7 +24,7 @@ export async function ssoAuthButtonListener(
   const encryptedIdent = encrypt(
     interaction.guildId + "-" + interaction.user.id
   );
-  const LINK = `https://sso.ui.ac.id/cas2/login?service=${process.env.SERVICE_URL}/${encryptedIdent}`;
+  const LINK = `https://sso.ui.ac.id/cas2/login?service=${serviceUrl}/${encryptedIdent}`;
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()

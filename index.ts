@@ -5,9 +5,13 @@ import { client } from "./bot";
 import { deployDev, deployProd } from "./bot/utils/deploy";
 import { app } from "./server";
 
-const token = process.env.TOKEN as string;
-const clientId = process.env.CLIENT_ID as string;
-const guildId = process.env.DEV_GUILD_ID as string;
+const token = process.env.TOKEN;
+const clientId = process.env.CLIENT_ID;
+const guildId = process.env.DEV_GUILD_ID;
+
+if (typeof token === "undefined") throw new Error("Missing TOKEN in env");
+if (typeof clientId === "undefined")
+  throw new Error("Missing CLIENT_ID in env");
 
 const argv = process.argv.slice(2);
 switch (argv[0]) {
@@ -21,6 +25,8 @@ switch (argv[0]) {
     deployProd(token, clientId);
     break;
   case "deploy:dev":
+    if (typeof guildId === "undefined")
+      throw new Error("Missing DEV_GUILD_ID in env");
     deployDev(token, clientId, guildId);
     break;
 }
