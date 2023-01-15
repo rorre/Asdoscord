@@ -58,9 +58,6 @@ export const SendAnonCommand: BotCommand<
         text: `UID: \`${calculateHash(ssoUsername)}\``,
       });
 
-    await interaction.channel?.send({ embeds: [messageEmbed] });
-    await interaction.editReply("Sent!");
-
     await prisma.message.create({
       data: {
         ssoUsername: ssoUsername,
@@ -68,6 +65,9 @@ export const SendAnonCommand: BotCommand<
         message,
       },
     });
+
+    await interaction.channel?.send({ embeds: [messageEmbed] });
+    await interaction.editReply("Sent!");
   },
 };
 
