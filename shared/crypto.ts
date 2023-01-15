@@ -15,8 +15,8 @@ export function encrypt(plaintext: string) {
 export function decrypt(cipherText: string) {
   const fullCipherBuf = Buffer.from(cipherText, "base64url");
 
-  const nonce = fullCipherBuf.slice(0, NONCE_SIZE);
-  const cipherBytes = fullCipherBuf.slice(NONCE_SIZE, fullCipherBuf.length);
+  const nonce = fullCipherBuf.subarray(0, NONCE_SIZE);
+  const cipherBytes = fullCipherBuf.subarray(NONCE_SIZE, fullCipherBuf.length);
 
   const cipher = crypto.createDecipheriv(CIPHER, KEY!, nonce);
   const resultBuf = Buffer.concat([cipher.update(cipherBytes), cipher.final()]);
