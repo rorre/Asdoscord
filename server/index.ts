@@ -2,10 +2,14 @@ import SSOClient from "./sso";
 import express from "express";
 import { decrypt } from "../shared/crypto";
 import { prisma } from "../shared/prisma";
-import { Prisma } from "@prisma/client";
+import mustacheExpress from "mustache-express";
 import { verifyUser } from "../bot/listeners/onAuth";
 
 export const app = express();
+app.engine("mustache", mustacheExpress());
+app.set("view engine", "mustache");
+app.set("views", __dirname + "/views");
+
 const ssoClient = new SSOClient("http://localhost:3000/callback");
 
 app.get("/callback/:ident", async (req, res) => {
@@ -13,7 +17,10 @@ app.get("/callback/:ident", async (req, res) => {
   try {
     [gid, uid] = decrypt(req.params.ident).split("-");
   } catch {
-    return res.send("Invalid identifier");
+    return res.render("notice", {
+      icon: "times-circle",
+      message: "Invalid identifier",
+    });
   }
 
   let user;
@@ -23,11 +30,17 @@ app.get("/callback/:ident", async (req, res) => {
       req.params.ident
     );
   } catch (err) {
-    return res.send((err as Error).message);
+    return res.render("notice", {
+      icon: "times-circle",
+      message: (err as Error).message,
+    });
   }
 
   if (!("npm" in user.attributes)) {
-    return res.send("Otentikasi hanya untuk mahasiswa, maaf.");
+    return res.render("notice", {
+      icon: "times-circle",
+      message: "Otentikasi hanya untuk mahasiswa, maaf.",
+    });
   }
 
   await prisma.user.upsert({
@@ -54,9 +67,11 @@ app.get("/callback/:ident", async (req, res) => {
 
   if (existing) {
     if (existing.discordId != uid) {
-      return res.send(
-        "Akun SSO sudah dipakai di server ini. Hanya ada satu akun discord yang bisa terkait dengan akun SSO."
-      );
+      return res.render("notice", {
+        icon: "times-circle",
+        message:
+          "Akun SSO sudah dipakai di server ini. Hanya ada satu akun discord yang bisa terkait dengan akun SSO.",
+      });
     }
   } else {
     try {
@@ -69,16 +84,22 @@ app.get("/callback/:ident", async (req, res) => {
       });
       await verifyUser(gid, uid);
     } catch (e) {
-      return res.send("An unknown error occured.");
+      return res.render("notice", {
+        icon: "times-circle",
+        message: "An unknown error occured.",
+      });
     }
   }
   res.redirect("/done");
 });
 
 app.get("/done", (req, res) => {
-  res.send("Authenticated. You can come back to the server now.");
+  res.render("notice", {
+    icon: "check-circle",
+    message: "Authenticated. You can come back to the server now.",
+  });
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.redirect("https://github.com/rorre/Asdoscord");
 });

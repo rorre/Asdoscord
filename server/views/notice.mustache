@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Asdoscord</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/f7639dc419.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Montserrat", sans-serif;
+        color: white;
+      }
+
+      .fa-check-circle {
+        color: #00e77d
+      }
+
+      .fa-times-circle {
+        color: red
+      }
+
+      .page {
+        background: #707070;
+        width: 100%;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .box {
+        padding-left: 3rem;
+        padding-right: 3rem;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        
+        border-radius: 2rem;
+        background-color: #121619;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      p {
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <div class="container">
+        <section class="box">
+          <i class="fas fa-{{icon}} fa-5x"></i>
+          <p>{{ message }}</p>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
