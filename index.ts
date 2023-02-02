@@ -16,7 +16,7 @@ if (typeof clientId === "undefined")
 const argv = process.argv.slice(2);
 switch (argv[0]) {
   case "run":
-    app.listen(3000, () => {
+    app.listen(process.env.PORT || 3000, () => {
       return console.log(`Server is listening on port 3000`);
     });
     client.login(token);
