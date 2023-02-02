@@ -18,7 +18,7 @@
     "xml2js": "^0.4.23"
   },
   "scripts": {
-    "build": "rimraf dist && tsc --project tsconfig.json && copyfiles server/views/* dist",
+    "build": "rimraf dist && prisma generate && tsc --project tsconfig.json && copyfiles server/views/* dist",
     "dev": "tsnd --files index.ts run",
     "start": "npm run build && node dist/index.js run",
     "deploy:dev": "npm run build && node dist/index.js deploy:dev",
