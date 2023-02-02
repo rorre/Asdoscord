@@ -10,7 +10,11 @@ app.engine("mustache", mustacheExpress());
 app.set("view engine", "mustache");
 app.set("views", __dirname + "/views");
 
-const ssoClient = new SSOClient("http://localhost:3000/callback");
+const serviceUrl = process.env.SERVICE_URL;
+if (typeof serviceUrl === "undefined")
+  throw new Error("Missing SERVICE_URL in env");
+
+const ssoClient = new SSOClient(serviceUrl);
 
 app.get("/callback/:ident", async (req, res) => {
   let gid, uid;
