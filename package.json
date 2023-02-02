@@ -20,9 +20,9 @@
   "scripts": {
     "build": "rimraf dist && prisma generate && tsc --project tsconfig.json && copyfiles server/views/* dist",
     "dev": "tsnd --files index.ts run",
-    "start": "npm run build && node dist/index.js run",
-    "deploy:dev": "npm run build && node dist/index.js deploy:dev",
-    "deploy:prod": "npm run build && node dist/index.js deploy"
+    "start": "node dist/index.js run",
+    "deploy:dev": "node dist/index.js deploy:dev",
+    "deploy:prod": "node dist/index.js deploy"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",

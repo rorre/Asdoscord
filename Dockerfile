@@ -8,4 +8,5 @@ COPY . .
 
 ARG PORT=3000
 EXPOSE ${PORT}
+RUN yarn build
 CMD [ "yarn" "start" ]
