@@ -1,7 +1,9 @@
+import { stripIndents } from "common-tags";
 import {
   CacheType,
   ChatInputCommandInteraction,
   EmbedBuilder,
+  PermissionFlagsBits,
   SlashCommandBuilder,
   userMention,
 } from "discord.js";
@@ -9,7 +11,6 @@ import { calculateHash } from "../../shared/crypto";
 import { prisma } from "../../shared/prisma";
 import { BotCommand } from "../types";
 import { usernameCache } from "../utils/caches";
-import { stripIndents } from "common-tags";
 
 export const SendAnonCommand: BotCommand<
   ChatInputCommandInteraction<CacheType>
@@ -77,6 +78,7 @@ export const RevealByUidCommand: BotCommand<
   data: new SlashCommandBuilder()
     .setName("reveal-uid")
     .setDescription("Reveals user with given UID")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .addStringOption((opt) =>
       opt.setName("uid").setDescription("UID to lookup").setRequired(true)
     )
