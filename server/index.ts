@@ -4,6 +4,7 @@ import { decrypt } from "../shared/crypto";
 import { prisma } from "../shared/prisma";
 import mustacheExpress from "mustache-express";
 import { verifyUser } from "../bot/listeners/onAuth";
+import crypto from "crypto";
 
 export const app = express();
 app.engine("mustache", mustacheExpress());
@@ -27,9 +28,9 @@ app.get("/callback/:ident", async (req, res) => {
     });
   }
 
-  let user;
+  let username;
   try {
-    user = await ssoClient.authenticate(
+    username = await ssoClient.authenticate(
       req.query.ticket as any,
       req.params.ident
     );
@@ -40,30 +41,31 @@ app.get("/callback/:ident", async (req, res) => {
     });
   }
 
-  if (!("npm" in user.attributes)) {
-    return res.render("notice", {
-      icon: "times-circle",
-      message: "Otentikasi hanya untuk mahasiswa, maaf.",
-    });
-  }
+  // if (!("npm" in username.attributes)) {
+  //   return res.render("notice", {
+  //     icon: "times-circle",
+  //     message: "Otentikasi hanya untuk mahasiswa, maaf.",
+  //   });
+  // }
 
+  const fakeNpm = crypto.randomBytes(20).toString("hex");
   await prisma.user.upsert({
-    where: { username: user.user },
+    where: { username: username },
     update: {
-      npm: user.attributes.npm,
-      name: user.attributes.nama,
+      npm: fakeNpm,
+      name: "",
     },
     create: {
-      username: user.user,
-      npm: user.attributes.npm,
-      name: user.attributes.nama,
+      username: username,
+      npm: fakeNpm,
+      name: "",
     },
   });
 
   const existing = await prisma.serverMember.findUnique({
     where: {
       ssoUsername_serverId: {
-        ssoUsername: user.user,
+        ssoUsername: username,
         serverId: gid,
       },
     },
@@ -81,7 +83,7 @@ app.get("/callback/:ident", async (req, res) => {
     try {
       await prisma.serverMember.create({
         data: {
-          ssoUsername: user.user,
+          ssoUsername: username,
           serverId: gid,
           discordId: uid,
         },

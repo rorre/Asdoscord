@@ -4,7 +4,7 @@ import { CASResponse } from "./types";
 import SSOUser from "./user";
 
 export default class SSOClient {
-  ssoUrl: string = "https://sso.ui.ac.id/cas2";
+  ssoUrl: string = "https://sso.ui.ac.id/cas3";
   serviceUrl: string;
   loginUrl: string;
   authUrl: string;
@@ -33,9 +33,7 @@ export default class SSOClient {
     )) as CASResponse;
 
     if ("authenticationSuccess" in parsedResponse.serviceResponse) {
-      return new SSOUser(
-        parsedResponse.serviceResponse.authenticationSuccess[0]
-      );
+      return parsedResponse.serviceResponse.authenticationSuccess[0].user[0];
     } else if ("authenticationFailure" in parsedResponse.serviceResponse) {
       throw new Error(
         "Error from server: " +

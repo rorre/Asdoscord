@@ -24,7 +24,7 @@ export async function ssoAuthButtonListener(
   const encryptedIdent = encrypt(
     interaction.guildId + "-" + interaction.user.id
   );
-  const LINK = `https://sso.ui.ac.id/cas2/login?service=${serviceUrl}/${encryptedIdent}`;
+  const LINK = `https://sso.ui.ac.id/cas3/login?service=${serviceUrl}/${encryptedIdent}`;
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
